@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Project ignores
+.idea
+config.py
+*.log
+
