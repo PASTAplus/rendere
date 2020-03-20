@@ -12,9 +12,61 @@
 :Created:
     3/19/20
 """
+import logging
+import os
+
+import click
+import daiquiri
+from jinja2 import Template
+
+from rendere.eml import eml_factory
 
 
-def main():
+cwd = os.path.dirname(os.path.realpath(__file__))
+logfile = cwd + "/render.log"
+daiquiri.setup(level=logging.INFO,
+               outputs=(daiquiri.output.File(logfile), "stdout",))
+
+
+def render(eml_file) -> str:
+    html = ""
+
+    with open(eml_file, "r", encoding="utf-8") as f:
+        eml_str = f.read()
+    eml = eml_factory(eml_str)
+
+    with open("./templates/eml.html", "r") as f:
+        _ = f.read()
+    template = Template(_)
+    html = template.render(eml=eml)
+    return html
+
+
+help_outfile = "Send rendered HTML to file"
+
+
+CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
+
+
+@click.command(context_settings=CONTEXT_SETTINGS)
+@click.argument("eml", required=True)
+@click.option("-o", "--outfile", default=None, help=help_outfile)
+def main(eml: str, outfile:str):
+    """
+        rendere /ˈrɛndere/
+
+        \b
+        Render an EML metadata document into HTML
+
+        \b
+        EML: path to EML file to be converted
+    """
+    html = render(eml)
+    if outfile is not None:
+        with open(outfile, "w") as f:
+            f.writelines(html)
+    else:
+        click.echo(html)
     return 0
 
 
