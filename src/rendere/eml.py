@@ -16,16 +16,43 @@ import daiquiri
 from lxml import etree
 
 
-versions = {
-        "eml://ecoinformatics.org/eml-2.1.0": "2.1.0",
-        "eml://ecoinformatics.org/eml-2.1.1": "2.1.1",
-        "https://eml.ecoinformatics.org/eml-2.2.0": "2.2.0",
-}
-
-
 class Eml:
     def __init__(self, eml_root):
-        pass
+        self._eml_root = eml_root
+        self._abstract = self._get_abstract()
+        self._package_id = (self._eml_root.attrib["packageId"]).strip()
+        self._title = self._get_title()
+        self._version = ((self._eml_root.nsmap["eml"]).split("/"))[-1]
+
+    def _get_abstract(self):
+        abstract = ""
+        _ = self._eml_root.find(".//abstract")
+        if _ is not None:
+            abstract = clean(_.xpath("string()"))
+        return abstract
+
+    def _get_title(self):
+        title = ""
+        _ = self._eml_root.find(".//title")
+        if _ is not None:
+            title = clean(_.xpath("string()"))
+        return title
+
+    @property
+    def abstract(self):
+        return self._abstract
+
+    @property
+    def package_id(self):
+        return self._package_id
+
+    @property
+    def title(self):
+        return self._title
+
+    @property
+    def version(self):
+        return self._version
 
 
 class Eml210(Eml):
@@ -43,18 +70,26 @@ class Eml220(Eml):
         super().__init__(eml_root)
 
 
-def eml_factory(eml_file: str):
-    with open(eml_file, "r", encoding="utf-8") as f:
-        eml_str = f.read()
+versions = {
+        "eml://ecoinformatics.org/eml-2.1.0": Eml210,
+        "eml://ecoinformatics.org/eml-2.1.1": Eml211,
+        "https://eml.ecoinformatics.org/eml-2.2.0": Eml220,
+}
+
+
+def clean(text):
+    return " ".join(text.split())
+
+
+def eml_factory(eml_str: str):
+    """
+    Returns the EML object for the specified version of EML
+    :param eml_str: EML XML string
+    :return: EML object
+    """
     eml = eml_str.encode("utf-8")
     eml_root = etree.fromstring(eml)
-    version = versions[eml_root.nsmap["eml"]]
-    if version == "2.1.0":
-        return Eml210(eml_root)
-    elif version == "2.1.1":
-        return Eml211(eml_root)
-    else: # version == "2.2.0":
-        return Eml220(eml_root)
+    return versions[eml_root.nsmap["eml"]](eml_root)
 
 
 def main():
