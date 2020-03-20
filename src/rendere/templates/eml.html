@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Bootstrap -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <title>{{ eml.package_id }}</title>
+</head>
+<body>
+<div class="container">
+<h1> EML Metadata for {{ eml.package_id }}</h1>
+<hr/>
+<h3>Title</h3>
+<p>{{ eml.title }}</p>
+
+<h3>Abstract</h3>
+<p>{{ eml.abstract }}</p>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</div>
+</body>
+</html>
