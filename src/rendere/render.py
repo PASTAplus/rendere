@@ -20,6 +20,7 @@ import daiquiri
 from jinja2 import Template
 
 from rendere.eml import eml_factory
+from rendere.recast import Recast
 
 
 cwd = os.path.dirname(os.path.realpath(__file__))
@@ -33,7 +34,7 @@ def render(eml_file) -> str:
 
     with open(eml_file, "r", encoding="utf-8") as f:
         eml_str = f.read()
-    eml = eml_factory(eml_str)
+    eml = Recast(eml_factory(eml_str))
 
     with open("./templates/eml.html", "r") as f:
         _ = f.read()
