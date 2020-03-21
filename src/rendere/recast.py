@@ -5,7 +5,8 @@
 :Mod: recast
 
 :Synopsis:
-
+    Recast is a helper class to modify the EML object members so that
+    they are more easily rendered in the Jinja2 template.
 :Author:
     servilla
 
