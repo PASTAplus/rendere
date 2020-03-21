@@ -27,6 +27,11 @@ def test_eml_object():
     assert isinstance(eml, Eml)
 
 
+def test_creators():
+    number_creators = len(eml.creators)
+    assert number_creators == 3
+
+
 def test_package_id():
     package_id = "knb-lter-nin.1.1"
     assert eml.package_id == package_id
