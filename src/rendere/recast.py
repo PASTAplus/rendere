@@ -13,7 +13,7 @@
 :Created:
     3/21/20
 """
-
+import markdown
 
 class Recast:
     def __init__(self, eml):
@@ -25,7 +25,7 @@ class Recast:
         self._version = eml.version
 
     def _abstract(self):
-        return text(self._eml.abstract)
+        return text_field(self._eml.abstract)
 
     def _creators(self):
         creators = list()
@@ -66,16 +66,24 @@ class Recast:
         return self._version
 
 
-def text(t):
+def text_field(t):
     html = ""
     for _ in t:
         for key in _:
+            if key == "markdown":
+                html += markdown.markdown(_[key])
             if key == "value":
                 html += _[key]
             if key == "para":
-                html += "<p>" + text(_[key]) + "</p>"
+                html += "<p>" + text_field(_[key]) + "</p>"
+            if key == "itemizedlist":
+                html += "<ul>" + text_field(_[key]) + "</ul>"
+            if key == "orderedlist":
+                html += "<ol>" + text_field(_[key]) + "</ol>"
+            if key == "listitem":
+                html += "<li>" + text_field(_[key]) + "</li>"
             if key == "literalLayout":
-                html += "<pre>" + text(_[key]) + "</pre>"
+                html += "<pre>" + text_field(_[key]) + "</pre>"
     return html
 
 

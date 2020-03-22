@@ -27,7 +27,7 @@ class Eml:
 
     def _get_abstract(self):
         abstract = self._eml_root.find(".//abstract")
-        return text(abstract)
+        return text_field(abstract)
 
     def _get_creators(self):
         creators = list()
@@ -128,12 +128,12 @@ def eml_factory(eml_str: str):
     return versions[eml_root.nsmap["eml"]](eml_root)
 
 
-def text(t):
+def text_field(t):
     text_list = list()
     if t.text is not None:
         text_list.append({"value": t.text})
     for _ in t:
-        text_list.append({_.tag: text(_)})
+        text_list.append({_.tag: text_field(_)})
     if t.tail is not None:
         text_list.append({"value": t.tail})
     return text_list
