@@ -26,11 +26,8 @@ class Eml:
         self._version = ((self._eml_root.nsmap["eml"]).split("/"))[-1]
 
     def _get_abstract(self):
-        abstract = ""
-        _ = self._eml_root.find(".//abstract")
-        if _ is not None:
-            abstract = clean(_.xpath("string()"))
-        return abstract
+        abstract = self._eml_root.find(".//abstract")
+        return text(abstract)
 
     def _get_creators(self):
         creators = list()
@@ -129,6 +126,17 @@ def eml_factory(eml_str: str):
     eml = eml_str.encode("utf-8")
     eml_root = etree.fromstring(eml)
     return versions[eml_root.nsmap["eml"]](eml_root)
+
+
+def text(t):
+    text_list = list()
+    if t.text is not None:
+        text_list.append({"value": t.text})
+    for _ in t:
+        text_list.append({_.tag: text(_)})
+    if t.tail is not None:
+        text_list.append({"value": t.tail})
+    return text_list
 
 
 def main():

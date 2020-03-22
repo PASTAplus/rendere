@@ -54,11 +54,16 @@
     <pubDate>2013</pubDate>
     <language>english</language>
     <abstract>
-      <para>This data package consists of Daily Water Sample Nutrient Data for North Inlet
-                Estuary, South Carolina, from 1978 to 1992, North Inlet LTER. Its purpose is to
+      <para>
+        This data package consists of Daily Water Sample Nutrient Data for North Inlet
+                Estuary, South Carolina, from 1978 to 1992, North Inlet LTER.
+                Its purpose is to
+      </para>
+      <para>
                 establish a long term data base on the nutrient dynamics of a salt marsh estuarine
                 system. This data can be used in correlation with a number of other estuarine data
-                sets to obtain a broader definition of the over all estuarine ecosystem.</para>
+                sets to obtain a broader definition of the over all estuarine ecosystem.
+      </para>
     </abstract>
     <keywordSet>
       <keyword keywordType="theme">nutrient dynamics</keyword>

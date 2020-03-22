@@ -18,11 +18,14 @@
 class Recast:
     def __init__(self, eml):
         self._eml = eml
-        self._abstract = eml.abstract
+        self._abstract = self._abstract()
         self._creators = self._creators()
         self._package_id = eml.package_id
         self._title = eml.title
         self._version = eml.version
+
+    def _abstract(self):
+        return text(self._eml.abstract)
 
     def _creators(self):
         creators = list()
@@ -61,6 +64,19 @@ class Recast:
     @property
     def version(self):
         return self._version
+
+
+def text(t):
+    html = ""
+    for _ in t:
+        for key in _:
+            if key == "value":
+                html += _[key]
+            if key == "para":
+                html += "<p>" + text(_[key]) + "</p>"
+            if key == "literalLayout":
+                html += "<pre>" + text(_[key]) + "</pre>"
+    return html
 
 
 def main():
