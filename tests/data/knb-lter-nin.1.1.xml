@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <eml:eml packageId="knb-lter-nin.1.1" scope="system"
-  system="https://pasta.lternet.edu"
-  xmlns:eml="eml://ecoinformatics.org/eml-2.1.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="eml://ecoinformatics.org/eml-2.1.0 http://nis.lternet.edu/schemas/eml/eml-2.1.0/eml.xsd">
-  <access authSystem="https://pasta.lternet.edu/authentication"
+  system="https://pasta.edirepository.org"
+  xmlns:eml="https://eml.ecoinformatics.org/eml-2.2.0"
+  xmlns:stmml="http://www.xml-cml.org/schema/stmml-1.2"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://eml.ecoinformatics.org/eml-2.2.0 https://nis.lternet.edu/schemas/EML/eml-2.2.0/xsd/eml.xsd">
+   <access authSystem="https://pasta.lternet.edu/authentication"
     order="allowFirst" system="https://pasta.lternet.edu">
     <allow>
       <principal>uid=NIN,o=LTER,dc=ecoinformatics,dc=org</principal>
@@ -56,13 +57,10 @@
     <abstract>
       <para>
         This data package consists of Daily Water Sample Nutrient Data for North Inlet
-                Estuary, South Carolina, from 1978 to 1992, North Inlet LTER.
-                Its purpose is to
-      </para>
-      <para>
-                establish a long term data base on the nutrient dynamics of a salt marsh estuarine
-                system. This data can be used in correlation with a number of other estuarine data
-                sets to obtain a broader definition of the over all estuarine ecosystem.
+        Estuary, South Carolina, from 1978 to 1992, North Inlet LTER. Its purpose is to
+        establish a long term data base on the nutrient dynamics of a salt marsh estuarine
+        system. This data can be used in correlation with a number of other estuarine data
+        sets to obtain a broader definition of the over all estuarine ecosystem.
       </para>
     </abstract>
     <keywordSet>
@@ -72,7 +70,31 @@
       <keyword keywordType="place">Georgetown, South Carolina</keyword>
     </keywordSet>
     <intellectualRights>
-      <section>
+      <markdown>
+        #### LTER Network Data Access Requirements
+        
+        The access to all LTER data is subject to requirements set forth by this
+        policy document to enable data providers to track usage, evaluate its impact in
+        the community, and confirm users' acceptance of the terms of acceptable use.
+        These requirements are standardized across the [LTER Network](https://www.lternet.edu)
+        to provide contractual exchange of data between Site Data Providers, Network Data
+        Providers, and Data Users that can be encoded into electronic form and exchanged
+        between computers. This will allow direct access to data via a common portal
+        once these requirements have been fulfilled. The following information may be
+        required directly or by proxy prior to the transference of any data object:
+        
+          - Regristration
+              - Name
+              - Affiliation
+              - Email address
+              - Full Contact Info
+          - Acceptance of the General Public Use Agreement or Restricted Data Use
+            Agreement, as applicable
+          - A Statement of Intended Use that is compliant with the above agreements.
+            Such statements may be made submitted explicitly or made implicitly via the
+            data access portal interface.
+      </markdown> 
+<!--      <section>
         <title>LTER Network Data Access Requirements</title>
         <para> The access to all LTER data is subject to requirements set forth by this
                     policy document to enable data providers to track usage, evaluate its impact in
@@ -114,12 +136,14 @@
           </itemizedlist>
         </para>
       </section>
+-->      
       <section>
         <title>Conditions of Data Use</title>
         <para> The re-use of scientific data has the potential to greatly increase
                     communication, collaboration and synthesis within and among disciplines, and
                     thus is fostered, supported and encouraged. Permission to use this dataset is
-                    granted to the Data User free of charge subject to the following terms: <itemizedlist>
+                    granted to the Data User free of charge subject to the following terms:
+          <itemizedlist>
             <listitem>
               <para> Acceptable Use. Use of the dataset will be restricted to
                                 academic, research, educational, government, recreational, or other
@@ -170,12 +194,15 @@
                                 encouraged to consider consultation, collaboration and/or
                                 co-authorship with the Data Set Creator. </para>
             </listitem>
-          </itemizedlist> By accepting this Data Set, the Data User agrees to abide by the
-                    terms of this agreement. The Data Owner shall have the right to terminate this
-                    agreement immediately by written notice upon the Data User's breach of, or
-                    non-compliance with, any of its terms. The Data User may be held responsible for
-                    any misuse that is caused or encouraged by the Data User's failure to abide by
-                    the terms of this agreement. </para>
+          </itemizedlist>
+        </para>
+        <para>
+          By accepting this Data Set, the Data User agrees to abide by the terms of this agreement.
+          The Data Owner shall have the right to terminate this agreement immediately by written
+          notice upon the Data User's breach of, or non-compliance with, any of its terms. The
+          Data User may be held responsible for any misuse that is caused or encouraged by the
+          Data User's failure to abide by the terms of this agreement.
+        </para>
       </section>
       <section>
         <title>Disclaimer</title>
@@ -185,7 +212,7 @@
                     User holds all parties involved in the production or distribution of the Data
                     Set harmless for damages resulting from its use or interpretation. </para>
       </section>
-    </intellectualRights>
+     </intellectualRights>
     <coverage>
       <geographicCoverage>
         <geographicDescription>North Inlet encompasses about 2,630 hectares of tidal marshes
