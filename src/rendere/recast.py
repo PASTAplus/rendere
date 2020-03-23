@@ -18,14 +18,12 @@ import markdown
 class Recast:
     def __init__(self, eml):
         self._eml = eml
-        self._abstract = self._abstract()
+        self._abstract = text_field(self._eml.abstract)
+        self._intellectual_rights = text_field(self._eml.intellectual_rights)
         self._creators = self._creators()
         self._package_id = eml.package_id
         self._title = eml.title
         self._version = eml.version
-
-    def _abstract(self):
-        return text_field(self._eml.abstract)
 
     def _creators(self):
         creators = list()
@@ -54,6 +52,10 @@ class Recast:
         return self._creators
 
     @property
+    def intellectual_rights(self):
+        return self._intellectual_rights
+
+    @property
     def package_id(self):
         return self._package_id
 
@@ -71,7 +73,8 @@ def text_field(t):
     for _ in t:
         for key in _:
             if key == "markdown":
-                html += markdown.markdown(_[key])
+                md = _[key][0]["value"]
+                html += markdown.markdown(md)
             if key == "value":
                 html += _[key]
             if key == "para":
@@ -84,6 +87,10 @@ def text_field(t):
                 html += "<li>" + text_field(_[key]) + "</li>"
             if key == "literalLayout":
                 html += "<pre>" + text_field(_[key]) + "</pre>"
+            if key == "section":
+                html += "<p>" + text_field(_[key]) + "</p>"
+            if key == "title":
+                html += "<h4>" + text_field(_[key]) + "</h4>"
     return html
 
 

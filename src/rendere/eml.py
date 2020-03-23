@@ -21,13 +21,14 @@ class Eml:
         self._eml_root = eml_root
         self._abstract = self._get_abstract()
         self._creators = self._get_creators()
+        self._intellectual_rights = self._get_intellectual_rights()
         self._package_id = (self._eml_root.attrib["packageId"]).strip()
         self._title = self._get_title()
         self._version = ((self._eml_root.nsmap["eml"]).split("/"))[-1]
 
     def _get_abstract(self):
         abstract = self._eml_root.find(".//abstract")
-        return text_field(abstract)
+        return self._text_field(abstract)
 
     def _get_creators(self):
         creators = list()
@@ -63,12 +64,50 @@ class Eml:
             creators.append(creator)
         return creators
 
+    def _get_intellectual_rights(self):
+        intellectual_rights = self._eml_root.find(".//intellectualRights")
+        return self._text_field(intellectual_rights)
+
     def _get_title(self):
         title = ""
         _ = self._eml_root.find(".//title")
         if _ is not None:
             title = clean(_.xpath("string()"))
         return title
+
+    def _leftshift_markdown(self, md):
+        lines = md.text.split("\n")
+        line_no = 0
+        for line in lines:
+            if len(line.strip()) > 0:
+                break
+            else:
+                line_no += 1
+        col_diff = len(lines[line_no]) - len(lines[line_no].lstrip())
+        line_no = 0
+        for line in lines:
+            lines[line_no] = line[col_diff:]
+            line_no += 1
+        text = "\n".join(lines)
+        return text
+
+    def _process_markdown(self, md):
+        text = self._leftshift_markdown(md)
+        return text
+
+    def _text_field(self, t):
+        text_list = list()
+        if t.text is not None:
+            if t.tag == "markdown":
+                text = self._process_markdown(t)
+                text_list.append({"value": text})
+            else:
+                text_list.append({"value": t.text})
+        for _ in t:
+            text_list.append({_.tag: self._text_field(_)})
+        if t.tail is not None:
+            text_list.append({"value": t.tail})
+        return text_list
 
     @property
     def abstract(self):
@@ -77,6 +116,10 @@ class Eml:
     @property
     def creators(self):
         return self._creators
+
+    @property
+    def intellectual_rights(self):
+        return self._intellectual_rights
 
     @property
     def package_id(self):
@@ -126,17 +169,6 @@ def eml_factory(eml_str: str):
     eml = eml_str.encode("utf-8")
     eml_root = etree.fromstring(eml)
     return versions[eml_root.nsmap["eml"]](eml_root)
-
-
-def text_field(t):
-    text_list = list()
-    if t.text is not None:
-        text_list.append({"value": t.text})
-    for _ in t:
-        text_list.append({_.tag: text_field(_)})
-    if t.tail is not None:
-        text_list.append({"value": t.tail})
-    return text_list
 
 
 def main():
