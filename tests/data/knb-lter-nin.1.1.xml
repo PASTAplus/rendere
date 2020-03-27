@@ -16,6 +16,8 @@
     </allow>
   </access>
   <dataset>
+    <alternateIdentifier>doi:10.6073/pasta/0q43ljasf09234sjlfas90</alternateIdentifier>
+    <alternateIdentifier>https://pasta.lternet.edu/package/eml/knb-lter-nin/1/1</alternateIdentifier>
     <title>Daily Water Sample Nutrient Data for North Inlet Estuary, South Carolina, from 1978 to 1992, North Inlet LTER</title>
     <creator>
       <individualName>
