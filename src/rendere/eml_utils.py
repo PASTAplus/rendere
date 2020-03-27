@@ -12,5 +12,11 @@
 :Created:
     3/25/20
 """
+import daiquiri
+
+
+logger = daiquiri.getLogger(__name__)
+
+
 def clean(text):
     return " ".join(text.split())

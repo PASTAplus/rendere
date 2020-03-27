@@ -23,8 +23,26 @@
         {{ creator }} <br/>
     {% endfor %}
 
+<h3>Curators</h3>
+    {% for contact in eml.contacts %}
+        {{ contact }} <br/>
+    {% endfor %}
+
 <h3>Intellectual Rights</h3>
-{{ eml.intellectual_rights }}
+    {{ eml.intellectual_rights }}
+
+<h3>Data Table(s)</h3>
+{% for table in eml.data_tables %}
+    <h4>{{ table["entityName"] }}</h4>
+    <ul>
+        <li>Description: {{ table["entityDescription"] }}</li>
+        {% for phy in table["physical"] %}
+            <li>File Name: {{ phy["objectName"] }}</li>
+            <li>File Size: {{ phy["size"] }}</li>
+        {% endfor %}
+    </ul>
+{% endfor %}
+
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>

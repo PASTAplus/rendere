@@ -36,7 +36,7 @@ def render(eml_file) -> str:
         eml_str = f.read()
     eml = Recast(eml_factory(eml_str))
 
-    with open("./templates/eml.html", "r") as f:
+    with open(f"{cwd}/templates/eml.html", "r") as f:
         _ = f.read()
     template = Template(_)
     html = template.render(eml=eml)

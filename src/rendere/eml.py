@@ -15,117 +15,51 @@
 import daiquiri
 from lxml import etree
 
-
-def _clean(text):
-    return " ".join(text.split())
-
-
-def _leftshift_markdown(md):
-    lines = md.text.split("\n")
-    line_no = 0
-    for line in lines:
-        if len(line.strip()) > 0:
-            break
-        else:
-            line_no += 1
-    col_diff = len(lines[line_no]) - len(lines[line_no].lstrip())
-    line_no = 0
-    for line in lines:
-        lines[line_no] = line[col_diff:]
-        line_no += 1
-    text = "\n".join(lines)
-    return text
+from rendere.eml_dataset import dataset
+from rendere.eml_resource import resource_group
+from rendere.eml_responsible_party import responsible_party
+from rendere.eml_utils import clean
 
 
-def _process_markdown(md):
-    text = _leftshift_markdown(md)
-    return text
+logger = daiquiri.getLogger(__name__)
 
 
 class Eml:
     def __init__(self, eml_root):
         self._eml_root = eml_root
-        self._abstract = self._get_abstract()
-        self._creators = self._get_creators()
-        self._intellectual_rights = self._get_intellectual_rights()
         self._package_id = (self._eml_root.attrib["packageId"]).strip()
-        self._title = self._get_title()
         self._version = ((self._eml_root.nsmap["eml"]).split("/"))[-1]
-
-    def _get_abstract(self):
-        abstract = self._eml_root.find(".//abstract")
-        return self._process_text_field(abstract)
-
-    def _get_creators(self):
-        creators = list()
-        _creators = self._eml_root.findall(".//dataset/creator")
-        for _creator in _creators:
-            individual_names = list()
-            organization_names = list()
-            position_names = list()
-            _individual_names = _creator.findall(".//individualName")
-            for _individual_name in _individual_names:
-                given_names = list()
-                _given_names = _individual_name.findall(".//givenName")
-                for _given_name in _given_names:
-                    given_name = (_clean(_given_name.xpath("string()"))).strip()
-                    given_names.append(given_name)
-                _sur_name = _individual_name.find(".//surName")
-                sur_name = (_clean(_sur_name.xpath("string()"))).strip()
-                individual_name = {"sur_name": sur_name,
-                                   "given_names": given_names}
-                individual_names.append(individual_name)
-            _organization_names = _creator.findall(".//organizationName")
-            for _organization_name in _organization_names:
-                organization_name = (
-                    _clean(_organization_name.xpath("string()"))).strip()
-                organization_names.append(organization_name)
-            _position_names = _creator.findall(".//positionName")
-            for _position_name in _position_names:
-                position_name = (_clean(_position_name.xpath("string()")))
-                position_names.append(position_name)
-            creator = {"individual_names": individual_names,
-                       "organization_names": organization_names,
-                       "position_names": position_names}
-            creators.append(creator)
-        return creators
-
-    def _get_intellectual_rights(self):
-        intellectual_rights = self._eml_root.find(".//intellectualRights")
-        return self._process_text_field(intellectual_rights)
-
-    def _get_title(self):
-        title = ""
-        _ = self._eml_root.find(".//title")
-        if _ is not None:
-            title = _clean(_.xpath("string()"))
-        return title
-
-    def _process_text_field(self, t):
-        text_list = list()
-        if t.text is not None:
-            if t.tag == "markdown":
-                text = _process_markdown(t)
-                text_list.append({"value": text})
-            else:
-                text_list.append({"value": t.text})
-        for _ in t:
-            text_list.append({_.tag: self._process_text_field(_)})
-        if t.tail is not None:
-            text_list.append({"value": t.tail})
-        return text_list
+        for module_type in ["dataset", "citation", "software", "protocol"]:
+            module = eml_root.find(f".//{module_type}")
+            if module is not None:
+                break
+        self._eml_resource = resource_group(module)
+        self._eml_contact = responsible_party(module.findall(".//contact"))
+        if module_type == "dataset":
+            self._eml_dataset = dataset(module)
+        else:
+            msg = f"Not supported module type: {module_type}"
+            raise ValueError(msg)
 
     @property
     def abstract(self):
-        return self._abstract
+        return self._eml_resource["abstract"]
 
     @property
-    def creators(self):
-        return self._creators
+    def contact(self):
+        return self._eml_contact
+
+    @property
+    def creator(self):
+        return self._eml_resource["creator"]
 
     @property
     def intellectual_rights(self):
-        return self._intellectual_rights
+        return self._eml_resource["intellectualRights"]
+
+    @property
+    def dataset(self):
+        return self._eml_dataset
 
     @property
     def package_id(self):
@@ -133,7 +67,7 @@ class Eml:
 
     @property
     def title(self):
-        return self._title
+        return self._eml_resource["title"]
 
     @property
     def version(self):

@@ -12,6 +12,10 @@
 :Created:
     3/25/20
 """
+import daiquiri
+
+logger = daiquiri.getLogger(__name__)
+
 
 def leftshift_markdown(md):
     lines = md.text.split("\n")
