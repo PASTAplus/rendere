@@ -37,8 +37,27 @@
     <ul>
         <li>Description: {{ table["entityDescription"] }}</li>
         {% for phy in table["physical"] %}
-            <li>File Name: {{ phy["objectName"] }}</li>
-            <li>File Size: {{ phy["size"] }}</li>
+            {% for key,value in phy.items() %}
+                {% if key == "Checksum(s)" %}
+                    <li>{{ key }}:</li>
+                    <ul>
+                        {% for c in value %}
+                            <li>{{ c }}</li>
+                        {% endfor %}
+                    </ul>
+                {% elif key == "Data Format" %}
+                    {% set df = phy[key] %}
+                    {% set type,items = df.popitem() %}
+                    <li>{{ key }}: {{ type }}</li>
+                    <ul>
+                        {% for key,value in items.items() %}
+                            <li>{{ key }}: {{ value }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <li>{{ key }}: {{ value }}</li>
+                {% endif %}
+            {% endfor %}
         {% endfor %}
     </ul>
 {% endfor %}
