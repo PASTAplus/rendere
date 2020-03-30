@@ -32,36 +32,10 @@
     {{ eml.intellectual_rights }}
 
 <h3>Data Table(s)</h3>
-{% for table in eml.data_tables %}
-    <h4>{{ table["entityName"] }}</h4>
-    <ul>
-        <li>Description: {{ table["entityDescription"] }}</li>
-        {% for phy in table["physical"] %}
-            {% for key,value in phy.items() %}
-                {% if key == "Checksum(s)" %}
-                    <li>{{ key }}:</li>
-                    <ul>
-                        {% for c in value %}
-                            <li>{{ c }}</li>
-                        {% endfor %}
-                    </ul>
-                {% elif key == "Data Format" %}
-                    {% set df = phy[key] %}
-                    {% set type,items = df.popitem() %}
-                    <li>{{ key }}: {{ type }}</li>
-                    <ul>
-                        {% for key,value in items.items() %}
-                            <li>{{ key }}: {{ value }}</li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <li>{{ key }}: {{ value }}</li>
-                {% endif %}
-            {% endfor %}
-        {% endfor %}
-    </ul>
-{% endfor %}
-
+    {% for table in eml.data_tables %}
+        <h4>{{ table["entityName"] }}</h4>
+        {% include "data_table.html" %}
+    {% endfor %}
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
