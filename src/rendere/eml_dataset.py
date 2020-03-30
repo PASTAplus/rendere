@@ -15,12 +15,16 @@
 import daiquiri
 
 from rendere.eml_data_table import data_table
+from rendere.eml_methods import methods
 
 logger = daiquiri.getLogger(__name__)
 
 
 def dataset(ds) -> dict:
     datasets = dict()
+    m = ds.find("./methods")
+    if m is not None:
+        methods(m)
     data_tables = ds.findall("./dataTable")
     if len(data_tables) > 0:
         datasets["dataTable"] = data_table(data_tables)
