@@ -15,11 +15,9 @@
 import daiquiri
 from lxml import etree
 
-from rendere.eml_dataset import dataset
-from rendere.eml_resource import resource_group
-from rendere.eml_responsible_party import responsible_party
-from rendere.eml_utils import clean
-
+from rendere.eml.eml_dataset import eml_dataset
+from rendere.eml.eml_resource import eml_resource
+from rendere.eml.eml_responsible_party import eml_responsible_party
 
 logger = daiquiri.getLogger(__name__)
 
@@ -30,32 +28,14 @@ class Eml:
         self._package_id = (self._eml_root.attrib["packageId"]).strip()
         self._version = ((self._eml_root.nsmap["eml"]).split("/"))[-1]
         for module_type in ["dataset", "citation", "software", "protocol"]:
-            module = eml_root.find(f".//{module_type}")
+            module = eml_root.find(f"./{module_type}")
             if module is not None:
                 break
-        self._eml_resource = resource_group(module)
-        self._eml_contact = responsible_party(module.findall(".//contact"))
         if module_type == "dataset":
-            self._eml_dataset = dataset(module)
+            self._eml_dataset = eml_dataset(module)
         else:
             msg = f"Not supported module type: {module_type}"
             raise ValueError(msg)
-
-    @property
-    def abstract(self):
-        return self._eml_resource["abstract"]
-
-    @property
-    def contact(self):
-        return self._eml_contact
-
-    @property
-    def creator(self):
-        return self._eml_resource["creator"]
-
-    @property
-    def intellectual_rights(self):
-        return self._eml_resource["intellectualRights"]
 
     @property
     def dataset(self):
@@ -64,10 +44,6 @@ class Eml:
     @property
     def package_id(self):
         return self._package_id
-
-    @property
-    def title(self):
-        return self._eml_resource["title"]
 
     @property
     def version(self):
