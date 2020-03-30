@@ -25,11 +25,11 @@ with open(path.join(here, 'LICENSE'), encoding='utf-8') as f:
 
 setup(
     name="rendere",
-    version="2020.03.20",
+    version="2020.03.29",
     description="Render an EML metadata document into HTML",
     long_description=long_description,
     author="PASTA+ project",
-    url="https://github.com/servilla/rendere",
+    url="https://github.com/PASTAplus/rendere",
     license=full_license,
     packages=find_packages(where="src"),
     include_package_data=True,
