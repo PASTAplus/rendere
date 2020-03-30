@@ -14,6 +14,7 @@
 """
 import daiquiri
 
+from rendere.eml_methods import methods
 from rendere.eml_utils import clean
 
 
@@ -32,6 +33,9 @@ def data_table(tables: list) -> list:
         if len(physicals) > 0:
             t["physical"] = physical(physicals)
         data_tables.append(t)
+        m = table.find("./methods")
+        if m is not None:
+            methods(m)
 
     return data_tables
 
@@ -59,17 +63,17 @@ def physical(phys: list) -> list:
             for compression_method in compression_methods:
                 c = list()
                 c.append(clean(compression_method.xpath("string()")))
-            p["compression_method"] = c
+            p["Compression Method"] = c
         encoding_methods = phy.findall(".//encodingMethod")
         if len(encoding_methods) > 0:
             for encoding_method in encoding_methods:
                 c = list()
                 c.append(clean(encoding_method.xpath("string()")))
-            p["encoding_method"] = c
+            p["Encoding Method"] = c
         character_encoding = phy.find("./characterEncoding")
         if character_encoding is not None:
             value = clean(character_encoding.xpath("string()"))
-            p["characterEncoding"] = value
+            p["Character Encoding"] = value
         p["Data Format"] = data_format(phy.find("./dataFormat"))
         physicals.append(p)
     return physicals
@@ -117,23 +121,23 @@ def data_format(df) -> dict:
             field_delimiters = simple_delimited.findall("./fieldDelimiter")
             for field_delimiter in field_delimiters:
                 fd.append(clean(field_delimiter.xpath("string()")))
-            td["fieldDelimiter"] = fd
+            td["Field Delimiter"] = fd
             collapse_delimiters = simple_delimited.find("./collapseDelimiters")
             if collapse_delimiters is not None:
-                td["collpaseDelimiters"] = \
+                td["Collapse Delimiters"] = \
                     clean(collapse_delimiters.xpath("string()"))
             quote_characters = simple_delimited.findall("./quoteCharacter")
             if quote_characters is not None:
                 qc = list()
                 for quote_character in quote_characters:
                     qc.append(clean(quote_character.xpath("string()")))
-                td["quoteCharacter"] = qc
+                td["Quote Character"] = qc
             literal_characters = simple_delimited.findall("./literalCharacter")
             if literal_characters is not None:
                 lc = list()
                 for literal_character in literal_characters:
                     lc.append(clean(literal_character.xpath("string()")))
-                td["literalCharacter"] = lc
+                td["Literal Character"] = lc
         complex = f.find("./complex")
         if complex is not None:
             c = list()
@@ -142,29 +146,29 @@ def data_format(df) -> dict:
                 if c_child == "textFixed":
                     tf = dict()
                     field_width = c_child.find("./fieldWidth")
-                    tf["fieldWidth"] = clean(field_width.xpath("string()"))
+                    tf["Field Width"] = clean(field_width.xpath("string()"))
                     line_number = c_child.find("./lineNumber")
                     if line_number is not None:
-                        tf["lineNumber"] = \
+                        tf["Line Number"] = \
                             clean(line_number.xpath("string()"))
                     field_start_column = c_child.find("./fieldStartColumn")
                     if field_start_column is not None:
-                        tf["fieldStartColumn"] = \
+                        tf["Field Start Column"] = \
                             clean(field_start_column.xpath("string()"))
                     c.append({"textFixed": tf})
                 else:  # c_child == "textDelimited"
                     td = dict()
                     field_delimiter = c_child.find("./fieldDelimiter")
-                    td["fieldDelimiter"] = \
+                    td["Field Delimiter"] = \
                         clean(field_delimiter.xpath("string()"))
                     collapse_delimiters = \
                         c_child.find("./collapseDelimiters")
                     if collapse_delimiters is not None:
-                        td["collpaseDelimiters"] = \
+                        td["Collpase Delimiters"] = \
                             clean(collapse_delimiters.xpath("string()"))
                     line_number = c_child.find("./lineNumber")
                     if line_number is not None:
-                        td["lineNumber"] = clean(
+                        td["Line Number"] = clean(
                             line_number.xpath("string()"))
                     quote_characters = c_child.findall("./quoteCharacter")
                     if quote_characters is not None:
@@ -172,18 +176,52 @@ def data_format(df) -> dict:
                         for quote_character in quote_characters:
                             qc.append(
                                 clean(quote_character.xpath("string()")))
-                        td["quoteCharacter"] = qc
+                        td["Quote Character"] = qc
                     literal_characters = c_child.findall("./literalCharacter")
                     if literal_characters is not None:
                         lc = list()
                         for literal_character in literal_characters:
                             lc.append(
                                 clean(literal_character.xpath("string()")))
-                        td["literalCharacter"] = lc
-                    c.append({"textDelimited": td})
+                        td["Literal Character"] = lc
+                    c.append({"Text Delimited": td})
         d_format["Text"] = tf
     elif f.tag == "externallyDefinedFormat":
-        pass
+        edf = dict()
+        format_name = f.find("./formatName")
+        edf["Format Name"] = clean(format_name.xpath("string()"))
+        format_version = f.find("./formatVersion")
+        if format_version is not None:
+            edf["Format Version"] = clean(format_version.xpath("string()"))
+        d_format[{"Externally Defined"}] = edf
     else:  # f.tag == binaryRasterFormat
-        pass
+        brf = dict()
+        row_col_orientation = f.find("./rowColumnOrientation")
+        brf["Row/Column Orientation"] = \
+            clean(row_col_orientation.xpath("string()"))
+        multi_band = f.find("./multiBand")
+        if multi_band is not None:
+            nbands = multi_band.find("./nbands")
+            layout = multi_band.find("./layout")
+            brf["Multi-band"] = {
+                "Number of bands": clean(nbands.xpath("string()")),
+                "Layout": clean(layout.xpath("string()"))
+            }
+        num_of_bits = f.find("./nbits")
+        brf["Number of bits"] = clean(num_of_bits.xpath("string()"))
+        byte_order = f.find("./byteorder")
+        brf["Byte Order"] = clean(byte_order.xpath("string()"))
+        skip_bytes = f.find("./skipbytes")
+        if skip_bytes is not None:
+            brf["Skip bytes"] = clean(skip_bytes.xpath("string()"))
+        band_row_bytes = f.find("./bandrowbytes")
+        if band_row_bytes is not None:
+            brf["Band row bytes"] = clean(band_row_bytes.xpath("string()"))
+        total_row_bytes = f.find("./totalrowbytes")
+        if total_row_bytes is not None:
+            brf["Total row bytes"] = clean(total_row_bytes.xpath("string()"))
+        band_gap_bytes = f.find("./bandgapbytes")
+        if band_gap_bytes is not None:
+            brf["Band-gap bytes"] = clean(band_gap_bytes.xpath("string()"))
+        d_format["Binary Raster"] = brf
     return d_format
