@@ -1,0 +1,42 @@
+<ul>
+    <li>Description: {{ table["entityDescription"] }}</li>
+    {% for phy in table["physical"] %}
+        {% for key,value in phy.items() %}
+            {% if key == "Checksum(s)" %}
+                <li>{{ key }}:</li>
+                <ul>
+                    {% for c in value %}
+                        <li>{{ c }}</li>
+                    {% endfor %}
+                </ul>
+            {% elif key == "Data Format" %}
+                {% set df = phy[key] %}
+                {% set type,items = df.popitem() %}
+                <li>{{ key }}: {{ type }}</li>
+                <ul>
+                    {% for key,value in items.items() %}
+                        {% if key == "Record Delimiter(s)" %}
+                            <li>{{ key }}:</li>
+                                <ul>
+                                    {%  for item in value %}
+                                        <li>{{ item }}</li>
+                                    {%  endfor %}
+                                </ul>
+                        {% elif key == "Physical Line Delimiter(s)" %}
+                            <li>{{ key }}:</li>
+                                <ul>
+                                    {%  for item in value %}
+                                        <li>{{ item }}</li>
+                                    {%  endfor %}
+                                </ul>
+                        {%  else %}
+                            <li>{{ key }}: {{ value }}</li>
+                        {%  endif %}
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <li>{{ key }}: {{ value }}</li>
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+</ul>
