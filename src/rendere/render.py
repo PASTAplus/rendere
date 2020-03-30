@@ -17,7 +17,7 @@ import os
 
 import click
 import daiquiri
-from jinja2 import Template
+from jinja2 import Environment, FileSystemLoader
 
 from rendere.eml import eml_factory
 from rendere.recast import Recast
@@ -32,20 +32,18 @@ daiquiri.setup(level=logging.INFO,
 def render(eml_file) -> str:
     html = ""
 
+    env = Environment(loader=FileSystemLoader("templates"))
+
     with open(eml_file, "r", encoding="utf-8") as f:
         eml_str = f.read()
     eml = Recast(eml_factory(eml_str))
 
-    with open(f"{cwd}/templates/eml.html", "r") as f:
-        _ = f.read()
-    template = Template(_)
+    template = env.get_template("eml.html")
     html = template.render(eml=eml)
     return html
 
 
 help_outfile = "Send rendered HTML to file"
-
-
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
 
