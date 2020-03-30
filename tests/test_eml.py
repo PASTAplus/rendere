@@ -13,11 +13,10 @@
     1/21/20
 """
 from lxml import etree
-import pytest
 from rendere.eml import Eml
 from rendere.eml import eml_factory
-import rendere.eml_responsible_party as eml_creator
-import rendere.eml_resource as eml_resource
+import rendere.eml.eml_responsible_party as eml_creator
+import rendere.eml.eml_resource as eml_resource
 
 test_eml_file = "./data/knb-lter-nin.1.1.xml"
 with open(test_eml_file, "r", encoding="utf-8") as f:
@@ -41,7 +40,7 @@ def test_eml_object():
 def test_resource():
     root = etree.fromstring(eml_str.encode("utf-8"))
     dataset = root.find(".//dataset")
-    resource = eml_resource.resource_group(dataset)
+    resource = eml_resource.eml_resource(dataset)
     assert isinstance(resource, dict)
 
 

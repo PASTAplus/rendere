@@ -11,29 +11,39 @@
 <h1> EML Metadata for {{ eml.package_id }}</h1>
 <hr/>
 <h3>Title</h3>
-<p>{{ eml.title }}</p>
+<p>{{ eml.dataset["Resource"]["Title"] }}</p>
 
 <h3>Abstract</h3>
 <p>
-    {{ eml.abstract }}
+    {{ eml.dataset["Resource"]["Abstract"] }}
 </p>
 
 <h3>Creators</h3>
-    {% for creator in eml.creators %}
+    {% for creator in eml.dataset["Resource"]["Creator"] %}
         {{ creator }} <br/>
     {% endfor %}
 
 <h3>Curators</h3>
-    {% for contact in eml.contacts %}
+    {% for contact in eml.dataset["Contact"] %}
         {{ contact }} <br/>
     {% endfor %}
 
 <h3>Intellectual Rights</h3>
-    {{ eml.intellectual_rights }}
+    {{ eml.dataset["Resource"]["Intellectual Rights"] }}
+
+{% if eml.dataset["Methods"] %}
+<h3>Methodology</h3>
+    <ol>
+    {% for item in eml.dataset["Methods"] %}
+        {% set key,value = item.popitem() %}
+        <li>{{ key }}: {{ value }}</li>
+    {% endfor %}
+    </ol>
+{% endif %}
 
 <h3>Data Table(s)</h3>
-    {% for table in eml.data_tables %}
-        <h4>{{ table["entityName"] }}</h4>
+    {% for table in eml.dataset["Data Table"] %}
+        <h4>{{ table["Entity Name"] }}</h4>
         {% include "data_table.html" %}
     {% endfor %}
 

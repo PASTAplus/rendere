@@ -19,8 +19,7 @@ import click
 import daiquiri
 from jinja2 import Environment, FileSystemLoader
 
-from rendere.eml import eml_factory
-from rendere.recast import Recast
+from rendere.eml.eml import eml_factory
 
 
 cwd = os.path.dirname(os.path.realpath(__file__))
@@ -36,7 +35,7 @@ def render(eml_file) -> str:
 
     with open(eml_file, "r", encoding="utf-8") as f:
         eml_str = f.read()
-    eml = Recast(eml_factory(eml_str))
+    eml = eml_factory(eml_str)
 
     template = env.get_template("eml.html")
     html = template.render(eml=eml)

@@ -1,6 +1,6 @@
 <ul>
-    <li>Description: {{ table["entityDescription"] }}</li>
-    {% for phy in table["physical"] %}
+    <li>Description: {{ table["Entity Description"] }}</li>
+    {% for phy in table["Physical"] %}
         {% for key,value in phy.items() %}
             {% if key == "Checksum(s)" %}
                 <li>{{ key }}:</li>
@@ -39,4 +39,13 @@
             {% endif %}
         {% endfor %}
     {% endfor %}
+    {% if table["Methods"] %}
+    <li>Methods:</li>
+    <ol>
+    {% for item in table["Methods"] %}
+        {% set key,value = item.popitem() %}
+        <li>{{ key }}: {{ value }}</li>
+    {% endfor %}
+    </ol>
+    {% endif %}
 </ul>
