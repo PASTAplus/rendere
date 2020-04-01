@@ -77,5 +77,5 @@ def html_text(t: list) -> str:
             if key == "section":
                 html += "<p>" + html_text(_[key]) + "</p>"
             if key == "title":
-                html += "<h4>" + html_text(_[key]) + "</h4>"
+                html += "<b>" + html_text(_[key]) + "</b>"
     return html
