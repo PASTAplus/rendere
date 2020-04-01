@@ -35,8 +35,7 @@
 <h3>Methodology</h3>
     <ol>
     {% for item in eml.dataset["Methods"] %}
-        {% set key,value = item.popitem() %}
-        <li>{{ key }}: {{ value }}</li>
+        {% include "methods.html" %}
     {% endfor %}
     </ol>
 {% endif %}

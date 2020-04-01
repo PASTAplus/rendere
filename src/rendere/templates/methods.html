@@ -1,0 +1,24 @@
+{% set key,value = item.popitem() %}
+{% if key == "Method Step" %}
+    <li><b>{{ key }}</b>: {{ value["Description"] }}</li>
+    <ul>
+    {% set instrumentation = value["Instrumentation"] %}
+    {%  if instrumentation|length > 0 %}
+        <li><b>Instrumentation</b>:</li>
+        <ul>
+        {% for instrument in instrumentation %}
+            <li>{{ instrument }}</li>
+        {% endfor %}
+        </ul>
+    {%  endif %}
+    {% set substeps = value["Sub Step(s)"] %}
+    {%  if substeps|length > 0 %}
+        <li><b>Sub Step(s)</b>:</li>
+        <ol>
+        {% for substep in substeps %}
+            <li>{{ substep["Description"] }}</li>
+        {% endfor %}
+        </ol>
+    {%  endif %}
+    </ul>
+{%  endif %}

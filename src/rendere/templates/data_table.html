@@ -3,7 +3,7 @@
     {% for phy in table["Physical"] %}
         {% for key,value in phy.items() %}
             {% if key == "Checksum(s)" %}
-                <li>{{ key }}:</li>
+                <li><b>{{ key }}</b>:</li>
                 <ul>
                     {% for c in value %}
                         <li>{{ c }}</li>
@@ -12,39 +12,38 @@
             {% elif key == "Data Format" %}
                 {% set df = phy[key] %}
                 {% set type,items = df.popitem() %}
-                <li>{{ key }}: {{ type }}</li>
+                <li><b>{{ key }}</b>: {{ type }}</li>
                 <ul>
                     {% for key,value in items.items() %}
                         {% if key == "Record Delimiter(s)" %}
-                            <li>{{ key }}:</li>
+                            <li><b>{{ key }}</b>:</li>
                                 <ul>
                                     {%  for item in value %}
                                         <li>{{ item }}</li>
                                     {%  endfor %}
                                 </ul>
                         {% elif key == "Physical Line Delimiter(s)" %}
-                            <li>{{ key }}:</li>
+                            <li><b>{{ key }}</b>:</li>
                                 <ul>
                                     {%  for item in value %}
                                         <li>{{ item }}</li>
                                     {%  endfor %}
                                 </ul>
                         {%  else %}
-                            <li>{{ key }}: {{ value }}</li>
+                            <li><b>{{ key }}</b>: {{ value }}</li>
                         {%  endif %}
                     {% endfor %}
                 </ul>
             {% else %}
-                <li>{{ key }}: {{ value }}</li>
+                <li><b>{{ key }}</b>: {{ value }}</li>
             {% endif %}
         {% endfor %}
     {% endfor %}
     {% if table["Methods"] %}
-    <li>Methods:</li>
+    <li><b>Methods</b>:</li>
     <ol>
     {% for item in table["Methods"] %}
-        {% set key,value = item.popitem() %}
-        <li>{{ key }}: {{ value }}</li>
+        {%  include "methods.html" %}
     {% endfor %}
     </ol>
     {% endif %}
