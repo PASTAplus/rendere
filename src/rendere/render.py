@@ -31,7 +31,7 @@ daiquiri.setup(level=logging.INFO,
 def render(eml_file) -> str:
     html = ""
 
-    env = Environment(loader=FileSystemLoader("templates"))
+    env = Environment(loader=FileSystemLoader(f"{cwd}/templates"))
 
     with open(eml_file, "r", encoding="utf-8") as f:
         eml_str = f.read()
