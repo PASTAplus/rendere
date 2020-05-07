@@ -28,6 +28,7 @@ setup(
     version="2020.03.29",
     description="Render an EML metadata document into HTML",
     long_description=long_description,
+    long_description_content_type="text/markdown",
     author="PASTA+ project",
     url="https://github.com/PASTAplus/rendere",
     license=full_license,
@@ -37,8 +38,8 @@ setup(
     package_dir={"": "src"},
     python_requires=">3.8.*",
     install_requires=[
-        "click>=7.1.1",
-        "daiquiri>=2.1.1",
+        "click >= 7.1.1",
+        "daiquiri >= 2.1.1",
         "jinja2 >= 2.11.1",
         "lxml >= 4.5.0",
         ],
