@@ -12,4 +12,5 @@ dependencies:
   - markdown
   - pendulum
   - requests
+  - urllib3=1.26.5
 prefix: /home/servilla/anaconda3/envs/rendere
