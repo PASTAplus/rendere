@@ -31,7 +31,7 @@ python-dateutil==2.8.2
 pytzdata==2020.1
 rendere==2020.3.29
 requests==2.27.1
-setuptools==60.9.3
+setuptools==65.5.1
 six==1.16.0
 tomli==2.0.1
 typed-ast==1.5.2
